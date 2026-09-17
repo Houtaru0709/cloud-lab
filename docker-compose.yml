@@ -1,0 +1,14 @@
+services:
+  backend:
+    build: ./mern-demo/server
+    ports:
+      - "5000:5000"
+    environment:
+      MONGODB_URI: "mongodb+srv://thuansad001_db_user:houtaru2005@cloud-lab.udgdfhq.mongodb.net/cloud-lab?appName=cloud-lab"
+
+  frontend:
+    build: ./mern-demo/client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend

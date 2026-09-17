@@ -3,19 +3,23 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
-const Student = require('./Student/student'); // đúng đường dẫn vì Student nằm trong server/
+const Student = require('./Student/student');
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-// Kết nối MongoDB Atlas
-mongoose.connect(process.env.MONGODB_URI)
+// Kết nối MongoDB
+mongoose
+  .connect(process.env.MONGODB_URI)
   .then(() => {
-    console.log('✅ Connected to MongoDB Atlas');
-    console.log('📌 Database:', mongoose.connection.name); // sẽ in ra "cloud-lab"
+    console.log('✅ Connected to MongoDB');
+    console.log('📌 Database:', mongoose.connection.name);
   })
-  .catch(err => console.error('❌ MongoDB connection error:', err));
+  .catch((err) => {
+    console.error('❌ MongoDB connection error:', err);
+  });
 
 // API thêm sinh viên
 app.post('/api/students', async (req, res) => {
@@ -40,7 +44,12 @@ app.get('/api/students', async (req, res) => {
 // API cập nhật sinh viên
 app.put('/api/students/:id', async (req, res) => {
   try {
-    const updated = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updated = await Student.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
     res.json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -58,4 +67,7 @@ app.delete('/api/students/:id', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});

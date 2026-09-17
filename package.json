@@ -1,0 +1,27 @@
+{
+  "name": "cloud-lab",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000C\u0000l\u0000o\u0000u\u0000d\u0000 \u0000C\u0000o\u0000m\u0000p\u0000u\u0000t\u0000i\u0000n\u0000g\u0000 \u0000L\u0000a\u0000b\u0000o\u0000r\u0000a\u0000t\u0000o\u0000r\u0000y\u0000 \u0000 \u0000S\u0000t\u0000u\u0000d\u0000e\u0000n\u0000t\u0000 \u0000N\u0000a\u0000m\u0000e\u0000:\u0000 \u0000P\u0000h\u0000a\u0000m\u0000K\u0000i\u0000m\u0000H\u0000o\u0000a\u0000T\u0000h\u0000u\u0000a\u0000n\u0000 \u0000S\u0000t\u0000u\u0000d\u0000e\u0000n\u0000t\u0000 \u0000I\u0000D\u0000:\u0000 \u00002\u00003\u00005\u00001\u00004\u00008\u0000 \u0000C\u0000l\u0000a\u0000s\u0000s\u0000:\u0000 \u0000D\u0000H\u00002\u00003\u0000T\u0000I\u0000N\u00000\u00005\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Houtaru0709/cloud-lab.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Houtaru0709/cloud-lab/issues"
+  },
+  "homepage": "https://github.com/Houtaru0709/cloud-lab#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.9.3"
+  }
+}

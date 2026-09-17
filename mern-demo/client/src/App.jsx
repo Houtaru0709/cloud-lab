@@ -1,81 +1,83 @@
 import { useEffect, useState } from 'react';
+import StudentForm from './StudentForm';
 
 function App() {
   const [students, setStudents] = useState([]);
-  const [studentId, setStudentId] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [editId, setEditId] = useState(null);
+  const [editName, setEditName] = useState('');
+  const [editEmail, setEditEmail] = useState('');
 
   // Lấy danh sách sinh viên từ backend
-  useEffect(() => {
-    fetch('/api/students')
-      .then(res => res.json())
-      .then(data => setStudents(data));
-  }, []);
-
-  // Thêm sinh viên mới
-  const addStudent = async (e) => {
-    e.preventDefault();
-    await fetch('/api/students', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ studentId, name, email })
-    });
-    const res = await fetch('/api/students');
+  const fetchStudents = async () => {
+    const res = await fetch('http://localhost:5000/api/students'); // sửa URL
     setStudents(await res.json());
-    setStudentId('');
-    setName('');
-    setEmail('');
+  };
+
+  useEffect(() => { fetchStudents(); }, []);
+
+  // Hàm sửa sinh viên
+  const handleUpdate = async (id) => {
+    const res = await fetch(`http://localhost:5000/api/students/${id}`, { // sửa URL
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: editName, email: editEmail })
+    });
+    const updated = await res.json();
+    setStudents(students.map(s => s._id === id ? updated : s));
+    setEditId(null);
+    setEditName('');
+    setEditEmail('');
+  };
+
+  // Hàm xóa sinh viên
+  const handleDelete = async (id) => {
+    await fetch(`http://localhost:5000/api/students/${id}`, { method: 'DELETE' }); // sửa URL
+    setStudents(students.filter(s => s._id !== id));
   };
 
   return (
     <div style={{ maxWidth: '600px', margin: '40px auto', fontFamily: 'Arial, sans-serif' }}>
       <h1 style={{ textAlign: 'center', color: '#2c3e50' }}>Danh sách sinh viên</h1>
 
-      <form onSubmit={addStudent} style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-        <input
-          style={{ flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-          placeholder="MSSV"
-          value={studentId}
-          onChange={e => setStudentId(e.target.value)}
-        />
-        <input
-          style={{ flex: 2, padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-          placeholder="Họ tên"
-          value={name}
-          onChange={e => setName(e.target.value)}
-        />
-        <input
-          style={{ flex: 2, padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-        />
-        <button
-          type="submit"
-          style={{ padding: '8px 12px', backgroundColor: '#3498db', color: 'white', border: 'none', borderRadius: '4px' }}
-        >
-          Thêm sinh viên
-        </button>
-      </form>
+      {/* Form thêm sinh viên */}
+      <StudentForm onAdded={fetchStudents} />
 
+      {/* Danh sách sinh viên */}
       <ul style={{ listStyle: 'none', padding: 0 }}>
         {students.map(s => (
-          <li
-            key={s._id}
-            style={{
-              background: '#ecf0f1',
-              marginBottom: '8px',
-              padding: '10px',
-              borderRadius: '4px'
-            }}
-          >
-            <strong>{s.studentId}</strong> - {s.name} - <em>{s.email}</em>
+          <li key={s._id} style={{ background: '#ecf0f1', marginBottom: '8px', padding: '10px', borderRadius: '4px' }}>
+            {editId === s._id ? (
+              <div>
+                <input
+                  value={editName}
+                  onChange={e => setEditName(e.target.value)}
+                  placeholder="Tên mới"
+                  style={{ marginRight: '8px' }}
+                />
+                <input
+                  value={editEmail}
+                  onChange={e => setEditEmail(e.target.value)}
+                  placeholder="Email mới"
+                  style={{ marginRight: '8px' }}
+                />
+                <button onClick={() => handleUpdate(s._id)}>Lưu</button>
+                <button onClick={() => setEditId(null)}>Hủy</button>
+              </div>
+            ) : (
+              <div>
+                <strong>{s.name}</strong> - <em>{s.email}</em>
+                <button style={{ marginLeft: '10px' }} onClick={() => {
+                  setEditId(s._id);
+                  setEditName(s.name);
+                  setEditEmail(s.email);
+                }}>Sửa</button>
+                <button style={{ marginLeft: '5px' }} onClick={() => handleDelete(s._id)}>Xóa</button>
+              </div>
+            )}
           </li>
         ))}
       </ul>
     </div>
   );
 }
-
 export default App;
