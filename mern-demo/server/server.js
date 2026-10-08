@@ -29,6 +29,14 @@ mongoose
     console.error("❌ MongoDB connection error:", err);
   });
 
+// Route mặc định kiểm tra trạng thái Server (Sửa lỗi Cannot GET /)
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "🚀 Backend Node.js đang hoạt động bình thường!",
+    timestamp: new Date(),
+  });
+});
+
 // Thêm sinh viên
 app.post("/api/students", async (req, res) => {
   try {
