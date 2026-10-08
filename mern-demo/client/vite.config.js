@@ -5,7 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: true,
-    allowedHosts: true // Cho phép tất cả các tên miền (bao gồm Render)
+    allowedHosts: [
+      'mern-frontend-235148.onrender.com' // Tên miền ứng dụng Frontend trên Render[cite: 15]
+    ]
   }
 })
