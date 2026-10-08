@@ -1,73 +1,94 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config();
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+require("dotenv").config();
 
-const Student = require('./Student/student');
+const Student = require("./Student/student");
 
 const app = express();
 
-app.use(cors());
+// CORS
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
+
 app.use(express.json());
 
 // Kết nối MongoDB
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
-    console.log('✅ Connected to MongoDB');
-    console.log('📌 Database:', mongoose.connection.name);
+    console.log("✅ Connected to MongoDB");
+    console.log("📌 Database:", mongoose.connection.name);
   })
   .catch((err) => {
-    console.error('❌ MongoDB connection error:', err);
+    console.error("❌ MongoDB connection error:", err);
   });
 
-// API thêm sinh viên
-app.post('/api/students', async (req, res) => {
+// Thêm sinh viên
+app.post("/api/students", async (req, res) => {
   try {
     const newStudent = await Student.create(req.body);
-    res.json(newStudent);
+    res.status(201).json(newStudent);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      error: err.message,
+    });
   }
 });
 
-// API lấy danh sách sinh viên
-app.get('/api/students', async (req, res) => {
+// Lấy danh sách sinh viên
+app.get("/api/students", async (req, res) => {
   try {
     const students = await Student.find();
     res.json(students);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      error: err.message,
+    });
   }
 });
 
-// API cập nhật sinh viên
-app.put('/api/students/:id', async (req, res) => {
+// Cập nhật sinh viên
+app.put("/api/students/:id", async (req, res) => {
   try {
     const updated = await Student.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      {
+        new: true,
+      }
     );
 
     res.json(updated);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      error: err.message,
+    });
   }
 });
 
-// API xóa sinh viên
-app.delete('/api/students/:id', async (req, res) => {
+// Xóa sinh viên
+app.delete("/api/students/:id", async (req, res) => {
   try {
     await Student.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Deleted successfully' });
+
+    res.json({
+      message: "Deleted successfully",
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      error: err.message,
+    });
   }
 });
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
