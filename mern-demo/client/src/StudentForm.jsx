@@ -7,9 +7,7 @@ function StudentForm({ onAdded }) {
   const [loading, setLoading] = useState(false);
 
   // URL BACKEND PORT 5000
-  const API_URL =
-    "https://cuddly-space-palm-tree-wrp654g4ppjg3vvr9-5000.app.github.dev/api/students";
-
+ const API_URL = "https://mern-backend-235148.onrender.com/api/students";
   const handleSubmit = async (e) => {
     e.preventDefault();
 

@@ -1,31 +1,15 @@
-# Stage 1: Build React Frontend
-FROM node:20-alpine AS builder
-
+# Stage 1: Build source
+FROM node:20-alpine AS build
 WORKDIR /app
-
-# Cai dat dependencies
 COPY package*.json ./
-RUN npm ci
-
-# Sao chep source code
+RUN npm install
 COPY . .
-
-# Cau hinh Backend URL truoc khi build
-ARG VITE_API_URL
-ENV VITE_API_URL=${VITE_API_URL}
-
-# Build React
 RUN npm run build
 
-# Stage 2: Chay Frontend
+# Stage 2: Serve trang tĩnh (Không bao giờ dính lỗi Block Host)
 FROM node:20-alpine
-
 WORKDIR /app
-
 RUN npm install -g serve
-
-COPY --from=builder /app/dist ./dist
-
+COPY --from=build /app/dist ./dist
 EXPOSE 3000
-
 CMD ["serve", "-s", "dist", "-l", "3000"]
